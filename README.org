@@ -1,0 +1,55 @@
+#+title: Internationalization of Cadenza, switch to ResourceBundles
+
+* Requirements
+
+- [[https://github.com/ggreer/the_silver_searcher][The Silver Surfer (aka ag)]]
+- [[https://www.gnu.org/software/findutils/][GNU Findutils (aka find)]]
+- [[http://python.org][Python3]]
+
+* Usage
+
+#+BEGIN_SRC sh
+# delete potentially existing classes from previous run
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza/ && rm Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/IMessageResolver.java Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/ResourceBundleMessageResolver.java
+# apply patches and convert the whole source tree
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza/ && for i in ~/Projekte/i18ntorb-tools/patches/*; do patch -p0 < "$i" ; done ; cd ~/Projekte/i18ntorb-tools/ && time ./convert_project.py ~/IDEA/cadenza-trunk-i18ntorb/cadenza/
+# add the new classes to svn
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza/ && svn add Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/IMessageResolver.java Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/ResourceBundleMessageResolver.java
+# apply post-processing patches
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza/ && for i in ~/Projekte/i18ntorb-tools/post-patches/*; do patch -p0 < "$i" ; done ; cd ~/Projekte/i18ntorb-tools/
+#+END_SRC
+
+** Undo
+
+#+BEGIN_SRC sh
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza && svn status | cut -c 2- | xargs svn revert
+#+END_SRC
+
+** Post-Process
+
+- C-S a Show Local Changes
+- select all files (3123 files)
+- M-C o
+
+- run the tests
+- Check the diff
+
+- Document the new process
+
+** *Ready to commit.*
+
+** For IntelliJ
+
+setup <https://www.jetbrains.com/help/idea/recognizing-hard-coded-string-literals.html>
+
+** For Eclipse
+
+setup JInto: <https://www.guh-software.de/jinto.html>
+
+To setup JInto for each project, just extract =jinto-init.tar.gz= in the VCS checkout, for example via =cd /path/to/cadenza-BRANCH/cadenza/ && tar xzf jinto-init.tar.gz= (or the equivalent on Windows).
+
+** Create patch
+#+BEGIN_SRC sh
+cd ~/IDEA/cadenza-trunk-i18ntorb/cadenza/ && svn diff --patch-compatible FILE > ~/Projekte/i18ntorb-tools/patches/PATCHFILE
+#+END_SRC
+
