@@ -1,0 +1,10 @@
+Index: Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/IMessageResolver.java
+===================================================================
+--- Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/IMessageResolver.java	(nicht existent)
++++ Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/IMessageResolver.java	(Arbeitskopie)
+@@ -0,0 +1,5 @@
++package net.disy.commons.core.locale;
++
++public interface IMessageResolver {
++  String getString(String key);
++}

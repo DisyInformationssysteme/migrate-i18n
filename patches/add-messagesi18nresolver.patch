@@ -1,0 +1,30 @@
+--- Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/ResourceBundleMessageResolver.java	(nicht existent)
++++ Disy_Commons_Core/src/main/java/net/disy/commons/core/locale/ResourceBundleMessageResolver.java	(Arbeitskopie)
+@@ -0,0 +1,27 @@
++package net.disy.commons.core.locale;
++
++import java.util.MissingResourceException;
++import java.util.ResourceBundle;
++
++import net.disy.commons.core.util.SystemPropertyUtilities;
++
++public class ResourceBundleMessageResolver implements IMessageResolver {
++  private final ResourceBundle RESOURCE_BUNDLE;
++  private final static boolean showMessageKeys = Boolean.parseBoolean(SystemPropertyUtilities
++      .getSecureSystemProperty("showMessageKeys", "false")); //$NON-NLS-1$
++
++  public ResourceBundleMessageResolver(String BUNDLE_NAME) {
++    this.RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
++  }
++
++  public String getString(String key){
++    if (showMessageKeys) {
++      return key;
++    }
++    try {
++      return RESOURCE_BUNDLE.getString(key);
++    } catch (MissingResourceException e) {
++      return '!' + key + '!';
++    }
++  }
++}
